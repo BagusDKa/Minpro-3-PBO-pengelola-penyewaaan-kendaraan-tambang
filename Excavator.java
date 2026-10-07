@@ -2,7 +2,7 @@ package model;
 
 public class Excavator extends KendaraanTambang {
 
-    private static final double BIAYA_OPERATOR_PER_HARI = 250000;
+    private static final double BIAYA_OPERATOR_PER_HARI = 500000;
 
     private double kapasitasBucket;
 
@@ -28,12 +28,13 @@ public class Excavator extends KendaraanTambang {
     }
 
     @Override
-    public String getDetail() {
+    protected String getDetail() {
         return String.format("Bucket %.1f m3", kapasitasBucket);
     }
 
     @Override
     public double hitungBiayaSewa(int hari) {
+        validasiHari(hari);
         return (getHargaSewaPerHari() + BIAYA_OPERATOR_PER_HARI) * hari;
     }
 }
