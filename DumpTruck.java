@@ -26,14 +26,17 @@ public class DumpTruck extends KendaraanTambang {
     }
 
     @Override
-    public String getDetail() {
+    protected String getDetail() {
         return String.format("Kapasitas %.1f ton", kapasitasTon);
     }
 
     @Override
     public double hitungBiayaSewa(int hari) {
-        double sewa = getHargaSewaPerHari() * hari;
-        double biayaBBM = sewa * 0.10;
-        return sewa + biayaBBM;
+        validasiHari(hari);
+        double total = getHargaSewaPerHari() * hari;
+        if (hari >= 7) {
+            total = total * 0.90;
+        }
+        return total;
     }
 }
