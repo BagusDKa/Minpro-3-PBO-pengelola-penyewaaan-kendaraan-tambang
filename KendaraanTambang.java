@@ -47,7 +47,7 @@ public abstract class KendaraanTambang {
 
     public abstract String getJenis();
 
-    public abstract String getDetail();
+    protected abstract String getDetail();
 
     public abstract double hitungBiayaSewa(int hari);
 
@@ -55,8 +55,14 @@ public abstract class KendaraanTambang {
         if (diskonPersen < 0 || diskonPersen > 100) {
             throw new IllegalArgumentException("Diskon harus antara 0 sampai 100.");
         }
-        double total = hitungBiayaSewa(hari);
+        double total = hitungBiayaSewa(hari); 
         return total - (total * diskonPersen / 100);
+    }
+
+    protected void validasiHari(int hari) {
+        if (hari <= 0) {
+            throw new IllegalArgumentException("Jumlah hari harus lebih dari 0.");
+        }
     }
 
     @Override
