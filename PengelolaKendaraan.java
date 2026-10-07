@@ -25,8 +25,8 @@ public class PengelolaKendaraan {
         return true;
     }
 
-    public ArrayList<KendaraanTambang> getDaftarKendaraan() {
-        return daftarKendaraan;
+    public ArrayList<KendaraanTambang> getSemuaKendaraan() {
+        return new ArrayList<>(daftarKendaraan);
     }
 
     public int cariIndexById(String id) {
@@ -38,13 +38,24 @@ public class PengelolaKendaraan {
         return -1;
     }
 
-    public KendaraanTambang cariById(String id) {
+
+    public KendaraanTambang cari(String id) {
         int index = cariIndexById(id);
         return (index == -1) ? null : daftarKendaraan.get(index);
     }
 
+    public ArrayList<KendaraanTambang> cari(double hargaMin, double hargaMax) {
+        ArrayList<KendaraanTambang> hasil = new ArrayList<>();
+        for (KendaraanTambang k : daftarKendaraan) {
+            if (k.getHargaSewaPerHari() >= hargaMin && k.getHargaSewaPerHari() <= hargaMax) {
+                hasil.add(k);
+            }
+        }
+        return hasil;
+    }
+
     public boolean updateKendaraan(String id, String namaBaru, double hargaBaru) {
-        KendaraanTambang k = cariById(id);
+        KendaraanTambang k = cari(id);
         if (k == null) {
             return false;
         }
