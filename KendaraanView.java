@@ -6,7 +6,7 @@ import model.KendaraanTambang;
 
 public class KendaraanView {
 
-    private final Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
     public void tampilkanMenu() {
         System.out.println();
@@ -16,7 +16,8 @@ public class KendaraanView {
         System.out.println("3. Update Data Kendaraan");
         System.out.println("4. Hapus Data Kendaraan");
         System.out.println("5. Hitung Biaya Sewa");
-        System.out.println("6. Keluar");
+        System.out.println("6. Cari Kendaraan (Rentang Harga)");
+        System.out.println("7. Keluar");
     }
 
     public void tampilkanJudul(String judul) {
@@ -25,6 +26,10 @@ public class KendaraanView {
 
     public void tampilkanPesan(String pesan) {
         System.out.println(pesan);
+    }
+
+    public void tampilkanPesan(String label, double nilaiRupiah) {
+        System.out.println(label + String.format("Rp %,.2f", nilaiRupiah));
     }
 
     public void tampilkanDaftar(ArrayList<KendaraanTambang> daftar) {
@@ -47,19 +52,6 @@ public class KendaraanView {
         System.out.println("Jenis kendaraan:");
         System.out.println("1. Dump Truck");
         System.out.println("2. Excavator");
-    }
-
-    public void tampilkanHasilBiaya(KendaraanTambang k, int hari, double total) {
-        System.out.println("Kendaraan   : " + k.getNamaKendaraan() + " (" + k.getJenis() + ")");
-        System.out.println("Lama sewa   : " + hari + " hari");
-        System.out.println(String.format("Total biaya : Rp %,.2f", total));
-    }
-
-    public void tampilkanHasilBiaya(KendaraanTambang k, int hari, double diskon, double total) {
-        System.out.println("Kendaraan   : " + k.getNamaKendaraan() + " (" + k.getJenis() + ")");
-        System.out.println("Lama sewa   : " + hari + " hari");
-        System.out.println("Diskon      : " + diskon + "%");
-        System.out.println(String.format("Total biaya : Rp %,.2f", total));
     }
 
     public String bacaStringTidakKosong(String pesan) {
@@ -113,19 +105,5 @@ public class KendaraanView {
             }
         }
         return nilai;
-    }
-
-    public boolean bacaYaTidak(String pesan) {
-        while (true) {
-            System.out.print(pesan);
-            String input = scanner.nextLine().trim().toLowerCase();
-            if (input.equals("y")) {
-                return true;
-            }
-            if (input.equals("n")) {
-                return false;
-            }
-            System.out.println("Ketik y atau n.");
-        }
     }
 }
