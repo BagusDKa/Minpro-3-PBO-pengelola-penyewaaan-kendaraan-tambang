@@ -1,6 +1,6 @@
 # Minpro-3-PBO-pengelola-penyewaaan-kendaraan-tambang
-Abstraction KendaraanTambang kini punya 3 abstract method: getJenis(), getDetail(), dan hitungBiayaSewa(int hari).
-Overriding DumpTruck dan Excavator menimpa hitungBiayaSewa(int) dengan rumus berbeda.
-Overloading hitungBiayaSewa(int hari) dan hitungBiayaSewa(int hari, double diskonPersen) memiliki nama sama dengan parameter berbeda.
-Polymorphism controller memanggil kendaraan.hitungBiayaSewa(...) lewat tipe KendaraanTambang, dan Java memilih rumus sesuai objek aslinya.
-MVC semua Scanner dan println dipindah ke View, PengelolaKendaraan di Model hanya mengurus data, dan Controller mengatur alurnya.
+kodenya dibagi 4 package model, view, controller, dan main. Class dan abstract method tetap sama hanya ditambah beberapa hal
+Abstraction: KendaraanTambang mendapat abstract method baru hitungBiayaSewa(int hari).
+Overriding: DumpTruck dan Excavator menghitung biaya sewa dengan cara berbeda, selain override getJenis(), getDetail(), dan toString().
+Overloading: hitungBiayaSewa(int) dan hitungBiayaSewa(int, double) di KendaraanTambang, cari(String) dan cari(double, double) di PengelolaKendaraan, serta tampilkanPesan(String) dan tampilkanPesan(String, double) di KendaraanView.
+MVC: semua System.out dan Scanner pindah ke View, alur menu ada di Controller, dan Model hanya berisi data
