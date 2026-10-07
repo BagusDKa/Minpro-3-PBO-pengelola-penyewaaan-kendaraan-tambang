@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import model.DumpTruck;
 import model.Excavator;
 import model.KendaraanTambang;
@@ -8,8 +9,8 @@ import view.KendaraanView;
 
 public class KendaraanController {
 
-    private final PengelolaKendaraan model;
-    private final KendaraanView view;
+    private PengelolaKendaraan model;
+    private KendaraanView view;
 
     public KendaraanController(PengelolaKendaraan model, KendaraanView view) {
         this.model = model;
@@ -20,14 +21,14 @@ public class KendaraanController {
         int pilihan;
         do {
             view.tampilkanMenu();
-            pilihan = view.bacaIntRentang("Pilih menu (1-6): ", 1, 6);
+            pilihan = view.bacaIntRentang("Pilih menu (1-7): ", 1, 7);
 
             switch (pilihan) {
                 case 1:
                     tambahData();
                     break;
                 case 2:
-                    view.tampilkanDaftar(model.getDaftarKendaraan());
+                    view.tampilkanDaftar(model.getSemuaKendaraan());
                     break;
                 case 3:
                     updateData();
@@ -36,13 +37,16 @@ public class KendaraanController {
                     hapusData();
                     break;
                 case 5:
-                    hitungBiaya();
+                    hitungBiayaSewa();
                     break;
                 case 6:
+                    cariByHarga();
+                    break;
+                case 7:
                     view.tampilkanPesan("Terima kasih, program selesai.");
                     break;
             }
-        } while (pilihan != 6);
+        } while (pilihan != 7);
     }
 
     private void tambahData() {
@@ -58,7 +62,7 @@ public class KendaraanController {
         String nama = view.bacaStringTidakKosong("Nama Kendaraan    : ");
         double harga = view.bacaDoublePositif("Harga Sewa / Hari : ");
 
-        KendaraanTambang kendaraan; // tipe parent, objek bisa DumpTruck/Excavator
+        KendaraanTambang kendaraan; 
         if (jenis == 1) {
             double kapasitas = view.bacaDoublePositif("Kapasitas (ton)   : ");
             kendaraan = new DumpTruck(id, nama, harga, kapasitas);
@@ -80,9 +84,9 @@ public class KendaraanController {
             view.tampilkanPesan("Belum ada data kendaraan.");
             return;
         }
-        view.tampilkanDaftar(model.getDaftarKendaraan());
+        view.tampilkanDaftar(model.getSemuaKendaraan());
         String id = view.bacaStringTidakKosong("Masukkan ID yang akan diupdate: ");
-        if (model.cariIndexById(id) == -1) {
+        if (model.cari(id) == null) {
             view.tampilkanPesan("Data dengan ID tersebut tidak ditemukan.");
             return;
         }
@@ -102,7 +106,7 @@ public class KendaraanController {
             view.tampilkanPesan("Belum ada data kendaraan.");
             return;
         }
-        view.tampilkanDaftar(model.getDaftarKendaraan());
+        view.tampilkanDaftar(model.getSemuaKendaraan());
         String id = view.bacaStringTidakKosong("Masukkan ID yang akan dihapus: ");
         if (model.hapusKendaraan(id)) {
             view.tampilkanPesan("Data berhasil dihapus.");
@@ -111,29 +115,44 @@ public class KendaraanController {
         }
     }
 
-    private void hitungBiaya() {
+    private void hitungBiayaSewa() {
         view.tampilkanJudul("Hitung Biaya Sewa");
         if (model.getJumlahData() == 0) {
             view.tampilkanPesan("Belum ada data kendaraan.");
             return;
         }
-        view.tampilkanDaftar(model.getDaftarKendaraan());
+        view.tampilkanDaftar(model.getSemuaKendaraan());
         String id = view.bacaStringTidakKosong("Masukkan ID kendaraan: ");
-        KendaraanTambang k = model.cariById(id);
+        KendaraanTambang k = model.cari(id); // overloading cari(String)
         if (k == null) {
             view.tampilkanPesan("Data dengan ID tersebut tidak ditemukan.");
             return;
         }
-
         int hari = view.bacaIntRentang("Lama sewa (hari, 1-365): ", 1, 365);
+        int diskon = view.bacaIntRentang("Diskon % (0 = tanpa diskon): ", 0, 100);
 
-        if (view.bacaYaTidak("Pakai diskon? (y/n): ")) {
-            int diskon = view.bacaIntRentang("Diskon (1-100 %): ", 1, 100);
-            double total = k.hitungBiayaSewa(hari, diskon);   
-            view.tampilkanHasilBiaya(k, hari, diskon, total);
+        double total;
+        if (diskon == 0) {
+            total = k.hitungBiayaSewa(hari);          
         } else {
-            double total = k.hitungBiayaSewa(hari);           
-            view.tampilkanHasilBiaya(k, hari, total);
+            total = k.hitungBiayaSewa(hari, diskon);  
+        }
+        view.tampilkanPesan("Total biaya sewa : ", total); 
+    }
+
+    private void cariByHarga() {
+        view.tampilkanJudul("Cari Kendaraan Berdasarkan Harga");
+        double min = view.bacaDoublePositif("Harga minimum: ");
+        double max = view.bacaDoublePositif("Harga maksimum: ");
+        if (min > max) {
+            view.tampilkanPesan("Harga minimum tidak boleh lebih besar dari maksimum.");
+            return;
+        }
+        ArrayList<KendaraanTambang> hasil = model.cari(min, max); 
+        if (hasil.isEmpty()) {
+            view.tampilkanPesan("Tidak ada kendaraan pada rentang harga tersebut.");
+        } else {
+            view.tampilkanDaftar(hasil);
         }
     }
 }
